@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.libcustom.custom.spring;
+package io.github.jleblanc64.hibernate5.spring;
 
 import io.github.jleblanc64.libcustom.LibCustom;
 import io.github.jleblanc64.libcustom.custom.hibernate.Utils;

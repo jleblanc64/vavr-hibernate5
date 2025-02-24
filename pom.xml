@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jleblanc64</groupId>
-    <artifactId>lib-custom</artifactId>
-    <version>1.0.10</version>
-    <name>Lib Custom</name>
+    <artifactId>vavr-hibernate5</artifactId>
+    <version>1.0.0</version>
+    <name>Vavr Hibernate 5</name>
 
     <description>
-        Lib Custom is a Java library for easily customizing third-party library code.
+        Vavr Hibernate 6 is a Java library to use Vavr collections with Hibernate 5.
     </description>
     <url>https://github.com/jleblanc64/lib-custom</url>
 

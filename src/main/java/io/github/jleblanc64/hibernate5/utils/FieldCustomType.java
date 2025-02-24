@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.libcustom.custom.utils;
+package io.github.jleblanc64.hibernate5.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
