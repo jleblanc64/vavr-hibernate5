@@ -17,9 +17,9 @@ package io.github.jleblanc64.hibernate5.jackson.deser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.github.jleblanc64.libcustom.custom.hibernate.Utils;
-import io.github.jleblanc64.libcustom.meta.MetaList;
-import io.github.jleblanc64.libcustom.meta.MetaOption;
+import io.github.jleblanc64.hibernate5.hibernate.Utils;
+import io.github.jleblanc64.hibernate5.meta.MetaList;
+import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import lombok.SneakyThrows;
 import org.springframework.http.converter.HttpMessageConverter;
 

@@ -15,11 +15,11 @@
  */
 package io.github.jleblanc64.hibernate5.spring;
 
+import io.github.jleblanc64.hibernate5.hibernate.Utils;
+import io.github.jleblanc64.hibernate5.hibernate.duplicate.ParameterizedTypeImpl;
+import io.github.jleblanc64.hibernate5.meta.MetaList;
+import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
-import io.github.jleblanc64.libcustom.custom.hibernate.Utils;
-import io.github.jleblanc64.libcustom.custom.hibernate.duplicate.ParameterizedTypeImpl;
-import io.github.jleblanc64.libcustom.meta.MetaList;
-import io.github.jleblanc64.libcustom.meta.MetaOption;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static io.github.jleblanc64.libcustom.custom.hibernate.Utils.getRefl;
+import static io.github.jleblanc64.hibernate5.hibernate.Utils.getRefl;
 import static io.github.jleblanc64.libcustom.functional.ListF.f;
 
 public class VavrSpring {

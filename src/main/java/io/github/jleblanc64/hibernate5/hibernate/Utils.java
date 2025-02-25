@@ -15,8 +15,8 @@
  */
 package io.github.jleblanc64.hibernate5.hibernate;
 
+import io.github.jleblanc64.hibernate5.meta.WithClass;
 import io.github.jleblanc64.libcustom.functional.ListF;
-import io.github.jleblanc64.libcustom.meta.WithClass;
 import lombok.SneakyThrows;
 import org.hibernate.collection.internal.AbstractPersistentCollection;
 

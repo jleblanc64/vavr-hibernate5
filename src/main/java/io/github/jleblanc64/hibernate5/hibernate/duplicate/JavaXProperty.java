@@ -16,9 +16,9 @@
 package io.github.jleblanc64.hibernate5.hibernate.duplicate;
 
 
-import io.github.jleblanc64.libcustom.custom.hibernate.Utils;
+import io.github.jleblanc64.hibernate5.hibernate.Utils;
+import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.github.jleblanc64.libcustom.functional.ListF;
-import io.github.jleblanc64.libcustom.meta.MetaList;
 import lombok.SneakyThrows;
 import org.hibernate.annotations.common.reflection.XClass;
 import org.hibernate.annotations.common.reflection.XProperty;
@@ -33,7 +33,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import static io.github.jleblanc64.hibernate5.hibernate.Utils.getRefl;
-import static io.github.jleblanc64.libcustom.custom.hibernate.Utils.isEntity;
+import static io.github.jleblanc64.hibernate5.hibernate.Utils.isEntity;
 import static io.github.jleblanc64.libcustom.functional.ListF.f;
 
 // https://github.com/hibernate/hibernate-commons-annotations/blob/5.1/src/main/java/org/hibernate/annotations/common/reflection/java/JavaXProperty.java

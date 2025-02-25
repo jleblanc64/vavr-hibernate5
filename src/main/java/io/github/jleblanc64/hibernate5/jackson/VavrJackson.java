@@ -15,9 +15,9 @@
  */
 package io.github.jleblanc64.hibernate5.jackson;
 
+import io.github.jleblanc64.hibernate5.meta.MetaList;
+import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
-import io.github.jleblanc64.libcustom.meta.MetaList;
-import io.github.jleblanc64.libcustom.meta.MetaOption;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 
 import java.util.ArrayList;
