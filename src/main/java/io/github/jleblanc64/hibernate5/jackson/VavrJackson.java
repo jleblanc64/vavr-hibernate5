@@ -25,7 +25,30 @@ import java.util.ArrayList;
 import static io.github.jleblanc64.libcustom.FieldMocked.*;
 
 public class VavrJackson {
-    public static void override(MetaOption metaOption, MetaList metaList) {
+    public static void override(MetaList metaList) {
+        LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
+            var returned = argsR.returned;
+            if (returned == null)
+                return returned;
+
+            fields(returned).forEach(f -> {
+                var type = f.getType();
+                Object empty;
+                if (metaList.isSuperClassOf(type))
+                    empty = metaList.fromJava(new ArrayList());
+                else
+                    return;
+
+                var o = getRefl(returned, f);
+                if (o == null)
+                    setRefl(returned, f, empty);
+            });
+
+            return returned;
+        });
+    }
+
+    public static void override(MetaOption metaOption) {
         LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
             var returned = argsR.returned;
             if (returned == null)
@@ -36,8 +59,6 @@ public class VavrJackson {
                 Object empty;
                 if (metaOption.isSuperClassOf(type))
                     empty = metaOption.fromValue(null);
-                else if (metaList.isSuperClassOf(type))
-                    empty = metaList.fromJava(new ArrayList());
                 else
                     return;
 
