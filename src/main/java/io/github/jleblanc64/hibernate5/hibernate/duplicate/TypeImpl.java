@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate5.utils;
+package io.github.jleblanc64.hibernate5.hibernate.duplicate;
 
 
 import java.lang.reflect.MalformedParameterizedTypeException;
@@ -21,8 +21,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
-import java.util.StringJoiner;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /** Implementing class for ParameterizedType interface. */
 

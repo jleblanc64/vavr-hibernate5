@@ -15,11 +15,11 @@
  */
 package io.github.jleblanc64.hibernate5.hibernate;
 
+import io.github.jleblanc64.hibernate5.hibernate.duplicate.FieldCustomType;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.JavaXProperty;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.MyCollectionType;
+import io.github.jleblanc64.hibernate5.hibernate.duplicate.TypeImpl;
 import io.github.jleblanc64.libcustom.LibCustom;
-import io.github.jleblanc64.libcustom.custom.utils.FieldCustomType;
-import io.github.jleblanc64.libcustom.custom.utils.TypeImpl;
 import io.github.jleblanc64.libcustom.meta.MetaList;
 import io.github.jleblanc64.libcustom.meta.MetaOption;
 import lombok.SneakyThrows;
