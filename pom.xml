@@ -8,7 +8,7 @@
     <name>Vavr Hibernate 5</name>
 
     <description>
-        Vavr Hibernate 6 is a Java library to use Vavr collections with Hibernate 5.
+        Vavr Hibernate 5 is a Java library to use Vavr collections with Hibernate 5.
     </description>
     <url>https://github.com/jleblanc64/lib-custom</url>
 
