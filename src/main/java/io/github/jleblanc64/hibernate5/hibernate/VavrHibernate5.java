@@ -53,10 +53,10 @@ public class VavrHibernate5 {
         var metaList = new MetaListImpl();
         var metaOption = new MetaOptionImpl();
 
-        override(metaList, metaOption);
+        overrideCustom(metaList, metaOption);
     }
 
-    public static void override(MetaList metaList, MetaOption metaOption) {
+    public static void overrideCustom(MetaList metaList, MetaOption metaOption) {
         overrideCustom(metaList);
         VavrSpring.overrideCustom(metaList);
         VavrJackson.overrideCustom(metaList);
