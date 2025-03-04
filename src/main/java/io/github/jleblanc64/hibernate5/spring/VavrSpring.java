@@ -37,7 +37,7 @@ import static io.github.jleblanc64.libcustom.functional.ListF.f;
 
 public class VavrSpring {
     @SneakyThrows
-    public static void override(MetaList metaList) {
+    public static void overrideCustom(MetaList metaList) {
         LibCustom.override(GenericConversionService.class, "convert", args -> {
             if (args == null || args.length != 3)
                 return LibCustom.ORIGINAL;
@@ -58,7 +58,7 @@ public class VavrSpring {
     }
 
     @SneakyThrows
-    public static void override(MetaOption metaOption) {
+    public static void overrideCustom(MetaOption metaOption) {
         var clazz = Class.forName("org.springframework.data.util.TypeDiscoverer");
         LibCustom.modifyArg(clazz, "createInfo", 0, args -> {
             var type = args[0].toString();
