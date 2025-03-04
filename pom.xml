@@ -10,14 +10,14 @@
     <description>
         Vavr Hibernate 5 is a Java library to use Vavr collections with Hibernate 5.
     </description>
-    <url>https://github.com/jleblanc64/lib-custom</url>
+    <url>https://github.com/jleblanc64/vavr-hibernate5</url>
 
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <bytebuddy.version>1.15.10</bytebuddy.version>
         <logback.version>1.5.6</logback.version>
-        <repository.url>git@github.com:jleblanc64/lib-custom.git</repository.url>
+        <repository.url>git@github.com:jleblanc64/vavr-hibernate5.git</repository.url>
     </properties>
 
     <licenses>
@@ -44,7 +44,7 @@
 
     <issueManagement>
         <system>github.com</system>
-        <url>https://github.com/jleblanc64/lib-custom/issues</url>
+        <url>https://github.com/jleblanc64/vavr-hibernate5/issues</url>
     </issueManagement>
 
     <scm>
@@ -74,12 +74,6 @@
             <groupId>io.github.jleblanc64</groupId>
             <artifactId>lib-custom</artifactId>
             <version>1.0.10</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
