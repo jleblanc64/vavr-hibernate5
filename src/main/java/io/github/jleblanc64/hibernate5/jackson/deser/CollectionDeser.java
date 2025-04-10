@@ -20,14 +20,15 @@ import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer;
 import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.fasterxml.jackson.databind.util.Converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
+import io.github.jleblanc64.hibernate5.meta.FromToJava;
 import io.github.jleblanc64.hibernate5.meta.MetaList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ListDeser {
+public class CollectionDeser {
     public static class Serializer<T> extends StdDelegatingSerializer {
-        public Serializer(MetaList<T> metaList) {
+        public Serializer(FromToJava<T, ?> metaList) {
             super(new StdConverter<T, Collection<?>>() {
                 @Override
                 public Collection<?> convert(T value) {
@@ -43,11 +44,11 @@ public class ListDeser {
     }
 
     public static class Deserializer<T> extends StdDelegatingDeserializer<T> {
-        public Deserializer(MetaList<T> metaList) {
+        public Deserializer(FromToJava<T, ?> metaList) {
             super(new StdConverter<Collection<?>, T>() {
                 @Override
                 public T convert(Collection<?> value) {
-                    return metaList.fromJava(new ArrayList<>(value));
+                    return metaList.fromJava(value);
                 }
             });
         }

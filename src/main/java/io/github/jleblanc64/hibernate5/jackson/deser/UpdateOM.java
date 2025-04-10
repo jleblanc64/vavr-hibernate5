@@ -20,8 +20,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.jleblanc64.hibernate5.hibernate.Utils;
 import io.github.jleblanc64.hibernate5.impl.MetaListImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaOptionImpl;
+import io.github.jleblanc64.hibernate5.impl.MetaSetImpl;
 import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.github.jleblanc64.hibernate5.meta.MetaOption;
+import io.github.jleblanc64.hibernate5.meta.MetaSet;
 import lombok.SneakyThrows;
 import org.springframework.http.converter.HttpMessageConverter;
 
@@ -32,17 +34,25 @@ public class UpdateOM {
     public static void update(ObjectMapper om, List<HttpMessageConverter<?>> converters) {
         var metaOption = new MetaOptionImpl();
         var metaList = new MetaListImpl();
-        updateCustom(om, converters, metaOption, metaList);
+        var metaSet = new MetaSetImpl();
+        updateCustom(om, converters, metaOption, metaList, metaSet);
     }
 
     @SneakyThrows
-    public static void updateCustom(ObjectMapper om, List<HttpMessageConverter<?>> converters, MetaOption metaOption, MetaList metaList) {
+    public static void updateCustom(ObjectMapper om, List<HttpMessageConverter<?>> converters, MetaOption metaOption, MetaList metaList, MetaSet metaSet) {
         om.registerModule(new OptionModule(metaOption));
 
         var simpleModule = new SimpleModule()
-                .addDeserializer(metaList.monadClass(), new ListDeser.Deserializer(metaList))
-                .addSerializer(metaList.monadClass(), new ListDeser.Serializer(metaList));
+                .addDeserializer(metaList.monadClass(), new CollectionDeser.Deserializer(metaList))
+                .addSerializer(metaList.monadClass(), new CollectionDeser.Serializer(metaList));
         om.registerModule(simpleModule);
+
+        if (metaSet != null) {
+            simpleModule = new SimpleModule()
+                    .addDeserializer(metaSet.monadClass(), new CollectionDeser.Deserializer(metaSet))
+                    .addSerializer(metaSet.monadClass(), new CollectionDeser.Serializer(metaSet));
+            om.registerModule(simpleModule);
+        }
 
         var msgConverterClass = Class.forName("org.springframework.http.converter.json.MappingJackson2HttpMessageConverter");
         io.vavr.collection.List.ofAll(converters).filter(c -> msgConverterClass.isAssignableFrom(c.getClass()))

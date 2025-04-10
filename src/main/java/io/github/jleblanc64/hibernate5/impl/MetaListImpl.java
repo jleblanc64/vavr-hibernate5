@@ -29,7 +29,7 @@ public class MetaListImpl implements MetaList<List> {
     }
 
     @Override
-    public List fromJava(java.util.List l) {
+    public List fromJava(Collection l) {
         return List.ofAll(l);
     }
 

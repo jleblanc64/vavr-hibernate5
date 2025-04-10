@@ -15,7 +15,7 @@
  */
 package io.github.jleblanc64.hibernate5.jackson;
 
-import io.github.jleblanc64.hibernate5.meta.MetaList;
+import io.github.jleblanc64.hibernate5.meta.FromToJava;
 import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import static io.github.jleblanc64.libcustom.FieldMocked.*;
 
 public class VavrJackson {
-    public static void overrideCustom(MetaList metaList) {
+    public static void overrideCustom(FromToJava metaList) {
         LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
             var returned = argsR.returned;
             if (returned == null)

@@ -13,10 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate5.meta;
+package io.github.jleblanc64.hibernate5.impl;
 
-import java.util.List;
+import io.github.jleblanc64.hibernate5.meta.MetaSet;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 
-public interface MetaList<T> extends FromToJava<T, List> {
-    BagProvider<? extends T> bag();
+import java.util.Collection;
+
+public class MetaSetImpl implements MetaSet<Set> {
+    @Override
+    public Class<Set> monadClass() {
+        return Set.class;
+    }
+
+    @Override
+    public Set fromJava(Collection l) {
+        return HashSet.ofAll(l);
+    }
+
+    @Override
+    public java.util.Set toJava(Set l) {
+        return l.toJavaSet();
+    }
 }

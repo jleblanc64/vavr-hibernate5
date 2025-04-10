@@ -15,8 +15,10 @@
  */
 package io.github.jleblanc64.hibernate5.meta;
 
-import java.util.List;
+import java.util.Collection;
 
-public interface MetaList<T> extends FromToJava<T, List> {
-    BagProvider<? extends T> bag();
+public interface FromToJava<T, Col extends Collection> extends WithClass<T> {
+    T fromJava(Collection l);
+
+    Col toJava(T t);
 }

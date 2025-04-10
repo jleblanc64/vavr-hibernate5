@@ -15,8 +15,7 @@
  */
 package io.github.jleblanc64.hibernate5.meta;
 
-import java.util.List;
+import java.util.Set;
 
-public interface MetaList<T> extends FromToJava<T, List> {
-    BagProvider<? extends T> bag();
+public interface MetaSet<T> extends FromToJava<T, Set> {
 }

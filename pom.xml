@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.jleblanc64</groupId>
     <artifactId>vavr-hibernate5</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>Vavr Hibernate 5</name>
 
     <description>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>io.github.jleblanc64</groupId>
             <artifactId>lib-custom</artifactId>
-            <version>1.0.10</version>
+            <version>1.0.11</version>
         </dependency>
 
         <dependency>

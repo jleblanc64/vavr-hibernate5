@@ -21,9 +21,11 @@ import io.github.jleblanc64.hibernate5.hibernate.duplicate.MyCollectionType;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.TypeImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaListImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaOptionImpl;
+import io.github.jleblanc64.hibernate5.impl.MetaSetImpl;
 import io.github.jleblanc64.hibernate5.jackson.VavrJackson;
 import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.github.jleblanc64.hibernate5.meta.MetaOption;
+import io.github.jleblanc64.hibernate5.meta.MetaSet;
 import io.github.jleblanc64.hibernate5.spring.OverrideContentType;
 import io.github.jleblanc64.hibernate5.spring.VavrSpring;
 import io.github.jleblanc64.libcustom.LibCustom;
@@ -52,14 +54,18 @@ public class VavrHibernate5 {
     public static void override() {
         var metaList = new MetaListImpl();
         var metaOption = new MetaOptionImpl();
+        var metaSet = new MetaSetImpl();
 
-        overrideCustom(metaList, metaOption);
+        overrideCustom(metaList, metaOption, metaSet);
     }
 
-    public static void overrideCustom(MetaList metaList, MetaOption metaOption) {
+    public static void overrideCustom(MetaList metaList, MetaOption metaOption, MetaSet metaSet) {
         overrideCustom(metaList);
         VavrSpring.overrideCustom(metaList);
         VavrJackson.overrideCustom(metaList);
+
+        if (metaSet != null)
+            VavrJackson.overrideCustom(metaSet);
 
         overrideCustom(metaOption);
         VavrSpring.overrideCustom(metaOption);
