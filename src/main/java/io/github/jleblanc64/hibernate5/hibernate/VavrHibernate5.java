@@ -62,10 +62,11 @@ public class VavrHibernate5 {
     public static void overrideCustom(MetaList metaList, MetaOption metaOption, MetaSet metaSet) {
         overrideCustom(metaList);
         VavrSpring.overrideCustom(metaList);
-        VavrJackson.overrideCustom(metaList);
 
         if (metaSet != null)
-            VavrJackson.overrideCustom(metaSet);
+            VavrJackson.overrideCustom(metaList, metaSet);
+        else
+            VavrJackson.overrideCustom(metaList);
 
         overrideCustom(metaOption);
         VavrSpring.overrideCustom(metaOption);
