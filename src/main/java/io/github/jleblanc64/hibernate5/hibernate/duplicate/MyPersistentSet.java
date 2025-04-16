@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 - Charles Dabadie
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.github.jleblanc64.hibernate5.hibernate.duplicate;
 
 import org.hibernate.HibernateException;
@@ -17,22 +32,10 @@ public class MyPersistentSet extends AbstractPersistentCollection {
     protected Set set;
     protected transient List tempList;
 
-    /**
-     * Empty constructor.
-     * <p/>
-     * Note: this form is not ever ever ever used by Hibernate; it is, however,
-     * needed for SOAP libraries and other such marshalling code.
-     */
     public MyPersistentSet() {
         // intentionally empty
     }
 
-    /**
-     * Constructor matching super.  Instantiates a lazy set (the underlying
-     * set is un-initialized).
-     *
-     * @param session The session to which this set will belong.
-     */
     public MyPersistentSet(SharedSessionContractImplementor session) {
         super(session);
     }
@@ -42,13 +45,6 @@ public class MyPersistentSet extends AbstractPersistentCollection {
         this((SharedSessionContractImplementor) session);
     }
 
-    /**
-     * Instantiates a non-lazy set (the underlying set is constructed
-     * from the incoming set reference).
-     *
-     * @param session The session to which this set will belong.
-     * @param set     The underlying set data.
-     */
     public MyPersistentSet(SharedSessionContractImplementor session, Set set) {
         super(session);
         // Sets can be just a view of a part of another collection.
@@ -146,19 +142,16 @@ public class MyPersistentSet extends AbstractPersistentCollection {
                 : exists;
     }
 
-    @SuppressWarnings("unchecked")
     public Iterator iteratorPriv() {
         read();
         return new IteratorProxy(set.iterator());
     }
 
-    @SuppressWarnings("unchecked")
     public Object[] toArrayPriv() {
         read();
         return set.toArray();
     }
 
-    @SuppressWarnings("unchecked")
     public Object[] toArray(Object[] array) {
         read();
         return set.toArray(array);
@@ -223,7 +216,6 @@ public class MyPersistentSet extends AbstractPersistentCollection {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public boolean retainAll(Collection coll) {
         initialize(true);
         if (set.retainAll(coll)) {
