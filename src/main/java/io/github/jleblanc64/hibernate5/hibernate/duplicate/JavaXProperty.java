@@ -26,6 +26,7 @@ import org.hibernate.annotations.common.reflection.java.JavaReflectionManager;
 import org.hibernate.annotations.common.reflection.java.JavaXMember;
 import org.hibernate.annotations.common.reflection.java.generics.TypeEnvironment;
 
+import javax.persistence.ElementCollection;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -87,7 +88,7 @@ public class JavaXProperty extends JavaXMember implements XProperty {
             constructor = clazzJavaXClass.getDeclaredConstructor(Class.class, TypeEnvironment.class, JavaReflectionManager.class);
             constructor.setAccessible(true);
 
-            isCollection = isEntity(paramClass.getDeclaredAnnotations());
+            isCollection = isEntity(paramClass.getDeclaredAnnotations()) || isAnnotationPresent(ElementCollection.class);
             collectionClass = metaList.monadClass();
             elementClass = (XClass) constructor.newInstance(paramClass, env, factory);
         }
