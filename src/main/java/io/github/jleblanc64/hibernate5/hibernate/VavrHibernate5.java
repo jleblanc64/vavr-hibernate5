@@ -23,6 +23,7 @@ import io.github.jleblanc64.hibernate5.impl.MetaListImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaOptionImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaSetImpl;
 import io.github.jleblanc64.hibernate5.jackson.VavrJackson;
+import io.github.jleblanc64.hibernate5.meta.MetaColl;
 import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import io.github.jleblanc64.hibernate5.meta.MetaSet;
@@ -36,11 +37,13 @@ import org.hibernate.cfg.AccessType;
 import org.hibernate.cfg.PropertyInferredData;
 import org.hibernate.cfg.annotations.BagBinder;
 import org.hibernate.cfg.annotations.CollectionBinder;
+import org.hibernate.cfg.annotations.SetBinder;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.metamodel.model.domain.internal.PluralAttributeBuilder;
 import org.hibernate.persister.collection.AbstractCollectionPersister;
 import org.hibernate.type.BagType;
 import org.hibernate.type.CollectionType;
+import org.hibernate.type.SetType;
 
 import javax.persistence.metamodel.PluralAttribute;
 import java.lang.reflect.Field;
@@ -61,6 +64,9 @@ public class VavrHibernate5 {
 
     public static void overrideCustom(MetaList metaList, MetaOption metaOption, MetaSet metaSet) {
         overrideCustom(metaList);
+        if (metaSet != null)
+            overrideCustom(metaSet);
+
         VavrSpring.overrideCustom(metaList);
 
         if (metaSet != null)
@@ -78,8 +84,8 @@ public class VavrHibernate5 {
     }
 
     @SneakyThrows
-    private static void overrideCustom(MetaList metaList) {
-        var bagProvList = metaList.bag();
+    private static void overrideCustom(MetaColl meta) {
+        var bagProv = meta.bag();
 
         LibCustom.modifyArg(org.hibernate.cfg.AnnotationBinder.class, "processElementAnnotations", 2, args -> {
             var pid = (PropertyInferredData) args[2];
@@ -87,15 +93,15 @@ public class VavrHibernate5 {
             var type = (Type) getRefl(p, "type");
             var at = (AccessType) getRefl(pid, "defaultAccess");
             var rm = (ReflectionManager) getRefl(pid, "reflectionManager");
-            var j = JavaXProperty.of((JavaXMember) p, type, metaList);
+            var j = JavaXProperty.of((JavaXMember) p, type, meta);
 
             if (!(type instanceof ParameterizedType))
                 return LibCustom.ORIGINAL;
 
             var rawType = ((ParameterizedType) type).getRawType();
-            if (metaList.isSuperClassOf(rawType)) {
+            if (meta.isSuperClassOf(rawType)) {
                 var f = (Field) j.getMember();
-                var jOver = JavaXProperty.of(f, type, j, metaList);
+                var jOver = JavaXProperty.of(f, type, j, meta);
                 return new PropertyInferredData(pid.getDeclaringClass(), jOver, at.getType(), rm);
             }
 
@@ -104,8 +110,9 @@ public class VavrHibernate5 {
 
         LibCustom.override(org.hibernate.metamodel.internal.AttributeFactory.class, "determineCollectionType", args -> {
             var clazz = (Class) args[0];
-            if (metaList.isSuperClassOf(clazz))
-                return PluralAttribute.CollectionType.LIST;
+            var type = meta.isSet() ? PluralAttribute.CollectionType.SET : PluralAttribute.CollectionType.LIST;
+            if (meta.isSuperClassOf(clazz))
+                return type;
 
             return LibCustom.ORIGINAL;
         });
@@ -114,11 +121,14 @@ public class VavrHibernate5 {
             var self = x.self;
 
             var collectionClass = (Class) getRefl(self, "collectionClass");
-            var listAttrClass = Class.forName("org.hibernate.metamodel.model.domain.internal.ListAttributeImpl");
+            var className = meta.isSet() ? "org.hibernate.metamodel.model.domain.internal.SetAttributeImpl" :
+                    "org.hibernate.metamodel.model.domain.internal.ListAttributeImpl";
+
+            var listAttrClass = Class.forName(className);
             var constructor = listAttrClass.getDeclaredConstructor(PluralAttributeBuilder.class);
             constructor.setAccessible(true);
 
-            if (metaList.isSuperClassOf(collectionClass))
+            if (meta.isSuperClassOf(collectionClass))
                 return constructor.newInstance(self);
 
             return LibCustom.ORIGINAL;
@@ -126,32 +136,35 @@ public class VavrHibernate5 {
 
         LibCustom.modifyArg(Class.forName("org.hibernate.type.CollectionType"), "getElementsIterator", 0, args -> {
             var collection = args[0];
-            if (metaList.isSuperClassOf(collection))
-                return metaList.toJava(collection);
+            if (meta.isSuperClassOf(collection))
+                return meta.toJava(collection);
 
             return collection;
         });
 
-        LibCustom.override(CollectionBinder.class, "getBinderFromBasicCollectionType", args ->
-                metaList.isSuperClassOf(args[0]) ? new BagBinder() : LibCustom.ORIGINAL);
+        LibCustom.override(CollectionBinder.class, "getBinderFromBasicCollectionType", args -> {
+            var bag = meta.isSet() ? new SetBinder(false) : new BagBinder();
+            return meta.isSuperClassOf(args[0]) ? bag : LibCustom.ORIGINAL;
+        });
 
-        LibCustom.override(BagType.class, "instantiate", args -> {
+        var typeClass = meta.isSet() ? SetType.class : BagType.class;
+        LibCustom.override(typeClass, "instantiate", args -> {
             if (args.length == 1)
                 return LibCustom.ORIGINAL;
 
             var pers = (AbstractCollectionPersister) args[1];
-            if (isOfType(pers, metaList))
-                return checkPersistentBag(bagProvList.of((SharedSessionContractImplementor) args[0]));
+            if (isOfType(pers, meta))
+                return checkPersistentBag(bagProv.of((SharedSessionContractImplementor) args[0]));
 
             return LibCustom.ORIGINAL;
         });
 
-        LibCustom.override(BagType.class, "wrap", args -> {
+        LibCustom.override(typeClass, "wrap", args -> {
             var arg1 = args[1];
 
-            if (metaList.isSuperClassOf(arg1)) {
-                var c = metaList.toJava(arg1);
-                return checkPersistentBag(bagProvList.of((SharedSessionContractImplementor) args[0], c));
+            if (meta.isSuperClassOf(arg1)) {
+                var c = meta.toJava(arg1);
+                return checkPersistentBag(bagProv.of((SharedSessionContractImplementor) args[0], c));
             }
 
             return LibCustom.ORIGINAL;

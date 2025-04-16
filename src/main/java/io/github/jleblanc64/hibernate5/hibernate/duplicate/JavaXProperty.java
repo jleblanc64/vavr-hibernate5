@@ -17,7 +17,7 @@ package io.github.jleblanc64.hibernate5.hibernate.duplicate;
 
 
 import io.github.jleblanc64.hibernate5.hibernate.Utils;
-import io.github.jleblanc64.hibernate5.meta.MetaList;
+import io.github.jleblanc64.hibernate5.meta.MetaColl;
 import io.github.jleblanc64.libcustom.functional.ListF;
 import lombok.SneakyThrows;
 import org.hibernate.annotations.common.reflection.XClass;
@@ -48,24 +48,24 @@ public class JavaXProperty extends JavaXMember implements XProperty {
     private XClass elementClass;
 
     @SneakyThrows
-    public static JavaXProperty of(JavaXMember m, Type type, MetaList metaList) {
-        return of(m, type, f(m.getAnnotations()), metaList);
+    public static JavaXProperty of(JavaXMember m, Type type, MetaColl MetaColl) {
+        return of(m, type, f(m.getAnnotations()), MetaColl);
     }
 
     @SneakyThrows
-    public static JavaXProperty of(Field f, Type type, JavaXProperty j, MetaList metaList) {
-        return new JavaXProperty(f, type, j.env, j.factory, j.annotations, metaList);
+    public static JavaXProperty of(Field f, Type type, JavaXProperty j, MetaColl MetaColl) {
+        return new JavaXProperty(f, type, j.env, j.factory, j.annotations, MetaColl);
     }
 
     @SneakyThrows
-    private static JavaXProperty of(JavaXMember m, Type type, List<Annotation> annotations, MetaList metaList) {
+    private static JavaXProperty of(JavaXMember m, Type type, List<Annotation> annotations, MetaColl MetaColl) {
         var env = (TypeEnvironment) getRefl(m, "env");
-        return new JavaXProperty(m.getMember(), type, env, new JavaReflectionManager(), f(annotations), metaList);
+        return new JavaXProperty(m.getMember(), type, env, new JavaReflectionManager(), f(annotations), MetaColl);
     }
 
     @SneakyThrows
     private JavaXProperty(Member member, Type type, TypeEnvironment env, JavaReflectionManager factory, ListF<Annotation> annotations,
-                          MetaList metaList) {
+                          MetaColl MetaColl) {
         super(member, type, env, factory, factory.toXType(env, typeOf(member, env)));
 
         this.env = env;
@@ -82,14 +82,14 @@ public class JavaXProperty extends JavaXMember implements XProperty {
 
         // elementClass
         var typeS = getRefl(this, "type").toString();
-        if (metaList != null && typeS.startsWith(metaList.monadClass().getName() + "<")) {
+        if (MetaColl != null && typeS.startsWith(MetaColl.monadClass().getName() + "<")) {
             var paramClass = Utils.paramClass(typeS);
             var clazzJavaXClass = Class.forName("org.hibernate.annotations.common.reflection.java.JavaXClass");
             constructor = clazzJavaXClass.getDeclaredConstructor(Class.class, TypeEnvironment.class, JavaReflectionManager.class);
             constructor.setAccessible(true);
 
             isCollection = isEntity(paramClass.getDeclaredAnnotations()) || isAnnotationPresent(ElementCollection.class);
-            collectionClass = metaList.monadClass();
+            collectionClass = MetaColl.monadClass();
             elementClass = (XClass) constructor.newInstance(paramClass, env, factory);
         }
     }
