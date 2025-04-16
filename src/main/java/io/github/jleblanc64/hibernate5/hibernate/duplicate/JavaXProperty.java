@@ -48,24 +48,24 @@ public class JavaXProperty extends JavaXMember implements XProperty {
     private XClass elementClass;
 
     @SneakyThrows
-    public static JavaXProperty of(JavaXMember m, Type type, MetaColl MetaColl) {
-        return of(m, type, f(m.getAnnotations()), MetaColl);
+    public static JavaXProperty of(JavaXMember m, Type type, MetaColl meta) {
+        return of(m, type, f(m.getAnnotations()), meta);
     }
 
     @SneakyThrows
-    public static JavaXProperty of(Field f, Type type, JavaXProperty j, MetaColl MetaColl) {
-        return new JavaXProperty(f, type, j.env, j.factory, j.annotations, MetaColl);
+    public static JavaXProperty of(Field f, Type type, JavaXProperty j, MetaColl meta) {
+        return new JavaXProperty(f, type, j.env, j.factory, j.annotations, meta);
     }
 
     @SneakyThrows
-    private static JavaXProperty of(JavaXMember m, Type type, List<Annotation> annotations, MetaColl MetaColl) {
+    private static JavaXProperty of(JavaXMember m, Type type, List<Annotation> annotations, MetaColl meta) {
         var env = (TypeEnvironment) getRefl(m, "env");
-        return new JavaXProperty(m.getMember(), type, env, new JavaReflectionManager(), f(annotations), MetaColl);
+        return new JavaXProperty(m.getMember(), type, env, new JavaReflectionManager(), f(annotations), meta);
     }
 
     @SneakyThrows
     private JavaXProperty(Member member, Type type, TypeEnvironment env, JavaReflectionManager factory, ListF<Annotation> annotations,
-                          MetaColl MetaColl) {
+                          MetaColl meta) {
         super(member, type, env, factory, factory.toXType(env, typeOf(member, env)));
 
         this.env = env;
@@ -82,14 +82,14 @@ public class JavaXProperty extends JavaXMember implements XProperty {
 
         // elementClass
         var typeS = getRefl(this, "type").toString();
-        if (MetaColl != null && typeS.startsWith(MetaColl.monadClass().getName() + "<")) {
+        if (meta != null && typeS.startsWith(meta.monadClass().getName() + "<")) {
             var paramClass = Utils.paramClass(typeS);
             var clazzJavaXClass = Class.forName("org.hibernate.annotations.common.reflection.java.JavaXClass");
             constructor = clazzJavaXClass.getDeclaredConstructor(Class.class, TypeEnvironment.class, JavaReflectionManager.class);
             constructor.setAccessible(true);
 
             isCollection = isEntity(paramClass.getDeclaredAnnotations()) || isAnnotationPresent(ElementCollection.class);
-            collectionClass = MetaColl.monadClass();
+            collectionClass = meta.monadClass();
             elementClass = (XClass) constructor.newInstance(paramClass, env, factory);
         }
     }
