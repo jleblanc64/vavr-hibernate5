@@ -17,8 +17,12 @@ package io.github.jleblanc64.hibernate5.meta;
 
 import java.util.Collection;
 
-public interface FromToJava<T, Col extends Collection> extends WithClass<T> {
+public interface MetaColl<T, Col extends Collection> extends WithClass<T> {
     T fromJava(Collection l);
 
     Col toJava(T t);
+
+    Class<Col> javaType();
+
+    BagProvider<? extends T> bag();
 }

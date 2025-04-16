@@ -17,5 +17,8 @@ package io.github.jleblanc64.hibernate5.meta;
 
 import java.util.Set;
 
-public interface MetaSet<T> extends FromToJava<T, Set> {
+public interface MetaSet<T> extends MetaColl<T, Set> {
+    default Class<Set> javaType() {
+        return Set.class;
+    }
 }

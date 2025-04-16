@@ -15,9 +15,11 @@
  */
 package io.github.jleblanc64.hibernate5.impl;
 
+import io.github.jleblanc64.hibernate5.meta.BagProvider;
 import io.github.jleblanc64.hibernate5.meta.MetaSet;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.util.Collection;
 
@@ -35,5 +37,21 @@ public class MetaSetImpl implements MetaSet<Set> {
     @Override
     public java.util.Set toJava(Set l) {
         return l.toJavaSet();
+    }
+
+    @Override
+    public BagProvider<? extends Set> bag() {
+        return new BagProvider<PersistentSetImpl>() {
+
+            @Override
+            public PersistentSetImpl of(SharedSessionContractImplementor session) {
+                return new PersistentSetImpl(session);
+            }
+
+            @Override
+            public PersistentSetImpl of(SharedSessionContractImplementor session, Collection<?> collection) {
+                return new PersistentSetImpl(session, collection);
+            }
+        };
     }
 }
