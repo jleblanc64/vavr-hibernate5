@@ -15,7 +15,6 @@
  */
 package io.github.jleblanc64.hibernate5.hibernate;
 
-import com.google.common.collect.Lists;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.FieldCustomType;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.JavaXProperty;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.MyCollectionType;
@@ -49,6 +48,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static io.github.jleblanc64.hibernate5.hibernate.Utils.*;
 
 public class VavrHibernate5 {
@@ -67,7 +67,7 @@ public class VavrHibernate5 {
 
         VavrSpring.overrideCustom(metaList);
 
-        var metas = Lists.newArrayList(metaList, metaOption);
+        var metas = newArrayList(metaList, metaOption);
         if (metaSet != null)
             metas.add(metaSet);
 
