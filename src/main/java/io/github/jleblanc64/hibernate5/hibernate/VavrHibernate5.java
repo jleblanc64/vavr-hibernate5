@@ -85,7 +85,7 @@ public class VavrHibernate5 {
 
     @SneakyThrows
     private static void overrideCustom(MetaColl meta) {
-        var bag = meta.bag();
+        var bagProv = meta.bag();
 
         LibCustom.modifyArg(org.hibernate.cfg.AnnotationBinder.class, "processElementAnnotations", 2, args -> {
             var pid = (PropertyInferredData) args[2];
@@ -143,8 +143,8 @@ public class VavrHibernate5 {
         });
 
         LibCustom.override(CollectionBinder.class, "getBinderFromBasicCollectionType", args -> {
-            var binder = meta.isSet() ? new SetBinder(false) : new BagBinder();
-            return meta.isSuperClassOf(args[0]) ? binder : LibCustom.ORIGINAL;
+            var bag = meta.isSet() ? new SetBinder(false) : new BagBinder();
+            return meta.isSuperClassOf(args[0]) ? bag : LibCustom.ORIGINAL;
         });
 
         var typeClass = meta.isSet() ? SetType.class : BagType.class;
@@ -154,7 +154,7 @@ public class VavrHibernate5 {
 
             var pers = (AbstractCollectionPersister) args[1];
             if (isOfType(pers, meta))
-                return checkPersistentBag(bag.apply(args[0], null));
+                return checkPersistentBag(bagProv.of((SharedSessionContractImplementor) args[0], null));
 
             return LibCustom.ORIGINAL;
         });
@@ -164,7 +164,7 @@ public class VavrHibernate5 {
 
             if (meta.isSuperClassOf(arg1)) {
                 var c = meta.toJava(arg1);
-                return checkPersistentBag(bag.apply(args[0], c));
+                return checkPersistentBag(bagProv.of((SharedSessionContractImplementor) args[0], c));
             }
 
             return LibCustom.ORIGINAL;

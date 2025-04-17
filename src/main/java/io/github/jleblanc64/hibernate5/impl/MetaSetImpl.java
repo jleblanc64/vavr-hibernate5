@@ -15,13 +15,12 @@
  */
 package io.github.jleblanc64.hibernate5.impl;
 
+import io.github.jleblanc64.hibernate5.meta.BagProvider;
 import io.github.jleblanc64.hibernate5.meta.MetaSet;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
 
 public class MetaSetImpl implements MetaSet<Set> {
     @Override
@@ -40,7 +39,7 @@ public class MetaSetImpl implements MetaSet<Set> {
     }
 
     @Override
-    public BiFunction<SharedSessionContractImplementor, Collection, Set> bag() {
+    public BagProvider<? extends Set> bag() {
         return PersistentSetImpl::new;
     }
 }
