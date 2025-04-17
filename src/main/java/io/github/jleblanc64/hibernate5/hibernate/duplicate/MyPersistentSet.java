@@ -15,9 +15,9 @@
  */
 package io.github.jleblanc64.hibernate5.hibernate.duplicate;
 
+import com.google.common.collect.Sets;
 import org.hibernate.HibernateException;
 import org.hibernate.collection.internal.AbstractPersistentCollection;
-import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.loader.CollectionAliases;
 import org.hibernate.persister.collection.CollectionPersister;
@@ -32,11 +32,11 @@ public class MyPersistentSet extends AbstractPersistentCollection {
     protected Set set;
     protected transient List tempList;
 
-    public MyPersistentSet(SharedSessionContractImplementor session, Set set) {
+    public MyPersistentSet(SharedSessionContractImplementor session, Collection coll) {
         super(session);
 
-        if (set != null) {
-            this.set = set;
+        if (coll != null) {
+            set = Sets.newHashSet(coll);
             setInitialized();
             setDirectlyAccessible(true);
         }

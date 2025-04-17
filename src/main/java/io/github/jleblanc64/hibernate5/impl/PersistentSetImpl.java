@@ -15,6 +15,7 @@
  */
 package io.github.jleblanc64.hibernate5.impl;
 
+import com.google.common.collect.Streams;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.MyPersistentSet;
 import io.vavr.PartialFunction;
 import io.vavr.Tuple2;
@@ -36,7 +37,7 @@ public class PersistentSetImpl extends MyPersistentSet implements Set {
     static RuntimeException NOT_IMPL = new RuntimeException("Not implemented");
 
     public PersistentSetImpl(SharedSessionContractImplementor session, Collection coll) {
-        super(session, coll != null ? newHashSet(coll.iterator()) : null);
+        super(session, coll);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class PersistentSetImpl extends MyPersistentSet implements Set {
     }
 
     HashSet h() {
-        return HashSet.ofAll(toJavaSet());
+        return HashSet.ofAll(Streams.stream(iteratorPriv()));
     }
 
     @Override
