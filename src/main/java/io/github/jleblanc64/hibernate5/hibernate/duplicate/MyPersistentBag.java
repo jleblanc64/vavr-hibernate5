@@ -42,9 +42,18 @@ public class MyPersistentBag extends AbstractPersistentCollection {
     public MyPersistentBag() {
     }
 
+    /**
+     * Constructs a PersistentBag
+     *
+     * @param session The session
+     */
+    public MyPersistentBag(SharedSessionContractImplementor session) {
+        super(session);
+    }
+
     @Deprecated
     public MyPersistentBag(SessionImplementor session) {
-        this((SharedSessionContractImplementor) session, null);
+        this((SharedSessionContractImplementor) session);
     }
 
     /**
@@ -56,17 +65,14 @@ public class MyPersistentBag extends AbstractPersistentCollection {
     @SuppressWarnings("unchecked")
     public MyPersistentBag(SharedSessionContractImplementor session, Collection coll) {
         super(session);
-
-        if (coll != null) {
-            providedCollection = coll;
-            if (coll instanceof List) {
-                bag = (List) coll;
-            } else {
-                bag = new ArrayList(coll);
-            }
-            setInitialized();
-            setDirectlyAccessible(true);
+        providedCollection = coll;
+        if (coll instanceof List) {
+            bag = (List) coll;
+        } else {
+            bag = new ArrayList(coll);
         }
+        setInitialized();
+        setDirectlyAccessible(true);
     }
 
     @Deprecated

@@ -154,7 +154,7 @@ public class VavrHibernate5 {
 
             var pers = (AbstractCollectionPersister) args[1];
             if (isOfType(pers, meta))
-                return checkPersistentBag(bagProv.of((SharedSessionContractImplementor) args[0], null));
+                return checkPersistentBag(bagProv.of((SharedSessionContractImplementor) args[0]));
 
             return LibCustom.ORIGINAL;
         });
