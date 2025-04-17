@@ -32,33 +32,14 @@ public class MyPersistentSet extends AbstractPersistentCollection {
     protected Set set;
     protected transient List tempList;
 
-    public MyPersistentSet() {
-        // intentionally empty
-    }
-
-    public MyPersistentSet(SharedSessionContractImplementor session) {
-        super(session);
-    }
-
-    @Deprecated
-    public MyPersistentSet(SessionImplementor session) {
-        this((SharedSessionContractImplementor) session);
-    }
-
     public MyPersistentSet(SharedSessionContractImplementor session, Set set) {
         super(session);
-        // Sets can be just a view of a part of another collection.
-        // do we need to copy it to be sure it won't be changing
-        // underneath us?
-        // ie. this.set.addAll(set);
-        this.set = set;
-        setInitialized();
-        setDirectlyAccessible(true);
-    }
 
-    @Deprecated
-    public MyPersistentSet(SessionImplementor session, Set set) {
-        this((SharedSessionContractImplementor) session, set);
+        if (set != null) {
+            this.set = set;
+            setInitialized();
+            setDirectlyAccessible(true);
+        }
     }
 
     @Override

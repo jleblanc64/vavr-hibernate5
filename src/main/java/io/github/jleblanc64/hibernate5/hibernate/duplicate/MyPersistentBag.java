@@ -35,49 +35,19 @@ public class MyPersistentBag extends AbstractPersistentCollection {
     // The Collection provided to a PersistentBag constructor,
     private Collection providedCollection;
 
-    /**
-     * Constructs a PersistentBag.  Needed for SOAP libraries, etc
-     */
-    @SuppressWarnings("UnusedDeclaration")
-    public MyPersistentBag() {
-    }
-
-    /**
-     * Constructs a PersistentBag
-     *
-     * @param session The session
-     */
-    public MyPersistentBag(SharedSessionContractImplementor session) {
-        super(session);
-    }
-
-    @Deprecated
-    public MyPersistentBag(SessionImplementor session) {
-        this((SharedSessionContractImplementor) session);
-    }
-
-    /**
-     * Constructs a PersistentBag
-     *
-     * @param session The session
-     * @param coll    The base elements.
-     */
-    @SuppressWarnings("unchecked")
     public MyPersistentBag(SharedSessionContractImplementor session, Collection coll) {
         super(session);
-        providedCollection = coll;
-        if (coll instanceof List) {
-            bag = (List) coll;
-        } else {
-            bag = new ArrayList(coll);
-        }
-        setInitialized();
-        setDirectlyAccessible(true);
-    }
 
-    @Deprecated
-    public MyPersistentBag(SessionImplementor session, Collection coll) {
-        this((SharedSessionContractImplementor) session, coll);
+        if (coll != null) {
+            providedCollection = coll;
+            if (coll instanceof List) {
+                bag = (List) coll;
+            } else {
+                bag = new ArrayList(coll);
+            }
+            setInitialized();
+            setDirectlyAccessible(true);
+        }
     }
 
     @Override

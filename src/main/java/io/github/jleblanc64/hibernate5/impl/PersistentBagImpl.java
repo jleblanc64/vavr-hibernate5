@@ -24,7 +24,7 @@ import java.util.Collection;
 
 public class PersistentBagImpl extends MyPersistentBag implements io.vavr.collection.List {
     public PersistentBagImpl(SharedSessionContractImplementor session) {
-        super(session);
+        super(session, null);
     }
 
     public PersistentBagImpl(SharedSessionContractImplementor session, Collection coll) {
