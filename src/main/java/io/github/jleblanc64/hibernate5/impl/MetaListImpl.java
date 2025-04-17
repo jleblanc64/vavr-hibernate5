@@ -18,7 +18,6 @@ package io.github.jleblanc64.hibernate5.impl;
 import io.github.jleblanc64.hibernate5.meta.BagProvider;
 import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.vavr.collection.List;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.util.Collection;
 
@@ -40,17 +39,6 @@ public class MetaListImpl implements MetaList<List> {
 
     @Override
     public BagProvider<? extends List> bag() {
-        return new BagProvider<PersistentBagImpl>() {
-
-            @Override
-            public PersistentBagImpl of(SharedSessionContractImplementor session) {
-                return new PersistentBagImpl(session);
-            }
-
-            @Override
-            public PersistentBagImpl of(SharedSessionContractImplementor session, Collection<?> collection) {
-                return new PersistentBagImpl(session, collection);
-            }
-        };
+        return PersistentBagImpl::new;
     }
 }

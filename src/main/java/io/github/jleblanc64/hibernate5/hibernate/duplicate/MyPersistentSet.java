@@ -36,24 +36,23 @@ public class MyPersistentSet extends AbstractPersistentCollection {
         // intentionally empty
     }
 
-    public MyPersistentSet(SharedSessionContractImplementor session) {
-        super(session);
-    }
-
     @Deprecated
     public MyPersistentSet(SessionImplementor session) {
-        this((SharedSessionContractImplementor) session);
+        this((SharedSessionContractImplementor) session, null);
     }
 
     public MyPersistentSet(SharedSessionContractImplementor session, Set set) {
         super(session);
-        // Sets can be just a view of a part of another collection.
-        // do we need to copy it to be sure it won't be changing
-        // underneath us?
-        // ie. this.set.addAll(set);
-        this.set = set;
-        setInitialized();
-        setDirectlyAccessible(true);
+
+        if (set != null) {
+            // Sets can be just a view of a part of another collection.
+            // do we need to copy it to be sure it won't be changing
+            // underneath us?
+            // ie. this.set.addAll(set);
+            this.set = set;
+            setInitialized();
+            setDirectlyAccessible(true);
+        }
     }
 
     @Deprecated

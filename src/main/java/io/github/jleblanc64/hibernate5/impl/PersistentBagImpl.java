@@ -23,10 +23,6 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import java.util.Collection;
 
 public class PersistentBagImpl extends MyPersistentBag implements io.vavr.collection.List {
-    public PersistentBagImpl(SharedSessionContractImplementor session) {
-        super(session);
-    }
-
     public PersistentBagImpl(SharedSessionContractImplementor session, Collection coll) {
         super(session, coll);
     }

@@ -35,10 +35,6 @@ import static com.google.common.collect.Sets.newHashSet;
 public class PersistentSetImpl extends MyPersistentSet implements Set {
     static RuntimeException NOT_IMPL = new RuntimeException("Not implemented");
 
-    public PersistentSetImpl(SharedSessionContractImplementor session) {
-        super(session);
-    }
-
     public PersistentSetImpl(SharedSessionContractImplementor session, Collection coll) {
         super(session, newHashSet(coll.iterator()));
     }
