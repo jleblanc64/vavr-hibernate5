@@ -19,6 +19,7 @@ import io.github.jleblanc64.hibernate5.hibernate.duplicate.MyPersistentSet;
 import io.vavr.PartialFunction;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
+import io.vavr.collection.HashSet;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.Map;
 import io.vavr.collection.Set;
@@ -48,160 +49,44 @@ public class PersistentSetImpl extends MyPersistentSet implements Set {
     }
 
     @Override
-    public Set add(Object element) {
-        throw NOT_IMPL;
+    public Iterator iterator() {
+        return Iterator.ofAll(iteratorPriv());
+    }
+
+    HashSet h() {
+        return HashSet.ofAll(toJavaSet());
+    }
+
+    @Override
+    public Set add(Object x) {
+        addPriv(x);
+        return this;
     }
 
     @Override
     public Set addAll(Iterable elements) {
-        throw NOT_IMPL;
+        super.addAll(newHashSet(elements));
+        return this;
     }
 
     @Override
     public int length() {
-        throw NOT_IMPL;
+        return size();
     }
 
     @Override
     public Set remove(Object element) {
-        throw NOT_IMPL;
+        removePriv(element);
+        return this;
     }
 
     @Override
     public Set removeAll(Iterable elements) {
-        throw NOT_IMPL;
+        super.removeAll(toJavaSet());
+        return this;
     }
 
-    @Override
-    public Iterator iterator() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set diff(Set that) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set intersect(Set that) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set union(Set that) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set distinct() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set distinctBy(Comparator comparator) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set drop(int n) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set dropRight(int n) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set dropUntil(Predicate predicate) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set dropWhile(Predicate predicate) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set filter(Predicate predicate) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set reject(Predicate predicate) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Object foldRight(Object zero, BiFunction f) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Iterator<? extends Set> grouped(int size) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public boolean hasDefiniteSize() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Object head() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set init() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Option<? extends Set> initOption() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public boolean isTraversableAgain() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Object last() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set orElse(Iterable other) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Tuple2<? extends Set, ? extends Set> partition(Predicate predicate) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public boolean isAsync() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public boolean isLazy() {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public Set peek(Consumer action) {
-        throw NOT_IMPL;
-    }
-
-    @Override
-    public String stringPrefix() {
-        throw NOT_IMPL;
-    }
-
+    // not implemented
     @Override
     public Set replace(Object currentElement, Object newElement) {
         throw NOT_IMPL;
@@ -217,133 +102,259 @@ public class PersistentSetImpl extends MyPersistentSet implements Set {
         throw NOT_IMPL;
     }
 
+    // forward to vavr HashSet
+    @Override
+    public Set diff(Set that) {
+        return h().diff(that);
+    }
+
+    @Override
+    public Set intersect(Set that) {
+        return h().intersect(that);
+    }
+
+    @Override
+    public Set union(Set that) {
+        return h().union(that);
+    }
+
+    @Override
+    public Set distinct() {
+        return h().distinct();
+    }
+
+    @Override
+    public Set distinctBy(Comparator comparator) {
+        return h().distinctBy(comparator);
+    }
+
+    @Override
+    public Set drop(int n) {
+        return h().drop(n);
+    }
+
+    @Override
+    public Set dropRight(int n) {
+        return h().dropRight(n);
+    }
+
+    @Override
+    public Set dropUntil(Predicate predicate) {
+        return h().dropUntil(predicate);
+    }
+
+    @Override
+    public Set dropWhile(Predicate predicate) {
+        return h().dropWhile(predicate);
+    }
+
+    @Override
+    public Set filter(Predicate predicate) {
+        return h().filter(predicate);
+    }
+
+    @Override
+    public Set reject(Predicate predicate) {
+        return h().reject(predicate);
+    }
+
+    @Override
+    public Object foldRight(Object zero, BiFunction f) {
+        return h().foldRight(zero, f);
+    }
+
+    @Override
+    public Iterator<? extends Set> grouped(int size) {
+        return h().grouped(size);
+    }
+
+    @Override
+    public boolean hasDefiniteSize() {
+        return h().hasDefiniteSize();
+    }
+
+    @Override
+    public Object head() {
+        return h().head();
+    }
+
+    @Override
+    public Set init() {
+        return h().init();
+    }
+
+    @Override
+    public Option<? extends Set> initOption() {
+        return h().initOption();
+    }
+
+    @Override
+    public boolean isTraversableAgain() {
+        return h().isTraversableAgain();
+    }
+
+    @Override
+    public Object last() {
+        return h().last();
+    }
+
+    @Override
+    public Set orElse(Iterable other) {
+        return h().orElse(other);
+    }
+
+    @Override
+    public Tuple2<? extends Set, ? extends Set> partition(Predicate predicate) {
+        return h().partition(predicate);
+    }
+
+    @Override
+    public boolean isAsync() {
+        return h().isAsync();
+    }
+
+    @Override
+    public boolean isLazy() {
+        return h().isLazy();
+    }
+
+    @Override
+    public Set peek(Consumer action) {
+        return h().peek(action);
+    }
+
+    @Override
+    public String stringPrefix() {
+        return h().stringPrefix();
+    }
+
     @Override
     public Set scan(Object zero, BiFunction operation) {
-        throw NOT_IMPL;
+        return h().scan(zero, operation);
     }
 
     @Override
     public Iterator<? extends Set> sliding(int size) {
-        throw NOT_IMPL;
+        return h().sliding(size);
     }
 
     @Override
     public Iterator<? extends Set> sliding(int size, int step) {
-        throw NOT_IMPL;
+        return h().sliding(size, step);
     }
 
     @Override
     public Tuple2<? extends Set, ? extends Set> span(Predicate predicate) {
-        throw NOT_IMPL;
+        return h().span(predicate);
     }
 
     @Override
     public Set tail() {
-        throw NOT_IMPL;
+        return h().tail();
     }
 
     @Override
     public Option<? extends Set> tailOption() {
-        throw NOT_IMPL;
+        return h().tailOption();
     }
 
     @Override
     public Set take(int n) {
-        throw NOT_IMPL;
+        return h().take(n);
     }
 
     @Override
     public Set takeRight(int n) {
-        throw NOT_IMPL;
+        return h().takeRight(n);
     }
 
     @Override
     public Set takeUntil(Predicate predicate) {
-        throw NOT_IMPL;
+        return h().takeUntil(predicate);
     }
 
     @Override
     public Set takeWhile(Predicate predicate) {
-        throw NOT_IMPL;
+        return h().takeWhile(predicate);
     }
 
     @Override
     public Set<Tuple2> zipWithIndex() {
-        throw NOT_IMPL;
+        return h().zipWithIndex();
     }
 
     @Override
     public Set zipWithIndex(BiFunction mapper) {
-        throw NOT_IMPL;
+        return h().zipWithIndex(mapper);
     }
 
     @Override
     public Set<Tuple2> zipAll(Iterable that, Object thisElem, Object thatElem) {
-        throw NOT_IMPL;
+        return h().zipAll(that, thisElem, thatElem);
     }
 
     @Override
     public Set zipWith(Iterable that, BiFunction mapper) {
-        throw NOT_IMPL;
+        return h().zipWith(that, mapper);
     }
 
     @Override
     public Set<Tuple2> zip(Iterable that) {
-        throw NOT_IMPL;
+        return h().zip(that);
     }
 
     @Override
     public Tuple3<? extends Set, ? extends Set, ? extends Set> unzip3(Function unzipper) {
-        throw NOT_IMPL;
+        return h().unzip3(unzipper);
     }
 
     @Override
     public Tuple2<? extends Set, ? extends Set> unzip(Function unzipper) {
-        throw NOT_IMPL;
+        return h().unzip(unzipper);
     }
 
     @Override
     public Iterator<? extends Set> slideBy(Function classifier) {
-        throw NOT_IMPL;
+        return h().slideBy(classifier);
     }
 
     @Override
     public Set scanRight(Object zero, BiFunction operation) {
-        throw NOT_IMPL;
+        return h().scanRight(zero, operation);
     }
 
     @Override
     public Set scanLeft(Object zero, BiFunction operation) {
-        throw NOT_IMPL;
+        return h().scanLeft(zero, operation);
     }
 
     @Override
     public Set orElse(Supplier supplier) {
-        throw NOT_IMPL;
+        return h().orElse(supplier);
     }
 
     @Override
     public Set map(Function mapper) {
-        throw NOT_IMPL;
+        return h().map(mapper);
     }
 
     @Override
     public Map groupBy(Function classifier) {
-        throw NOT_IMPL;
+        return h().groupBy(classifier);
     }
 
     @Override
     public Set flatMap(Function mapper) {
-        throw NOT_IMPL;
+        return h().flatMap(mapper);
     }
 
     @Override
     public Set distinctBy(Function keyExtractor) {
-        throw NOT_IMPL;
+        return h().distinctBy(keyExtractor);
     }
 
     @Override
     public Set collect(PartialFunction partialFunction) {
-        throw NOT_IMPL;
+        return h().collect(partialFunction);
     }
 }
