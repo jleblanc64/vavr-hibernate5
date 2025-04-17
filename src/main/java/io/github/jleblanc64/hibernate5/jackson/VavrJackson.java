@@ -17,10 +17,10 @@ package io.github.jleblanc64.hibernate5.jackson;
 
 import io.github.jleblanc64.hibernate5.meta.MetaColl;
 import io.github.jleblanc64.hibernate5.meta.MetaOption;
+import io.github.jleblanc64.hibernate5.meta.WithClass;
 import io.github.jleblanc64.libcustom.LibCustom;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static io.github.jleblanc64.libcustom.FieldMocked.*;
@@ -47,19 +47,19 @@ public class VavrJackson {
             return (Collection) returned;
 
         var matched = matchMeta(returned.getClass(), metaList);
-        if (matched != null)
-            return matched.toJava(returned);
+        if (matched != null && matched instanceof MetaColl)
+            return ((MetaColl) matched).toJava(returned);
 
         return null;
     }
 
-    private static void fillEmpty(Object returned, MetaColl... metaList) {
+    private static void fillEmpty(Object returned, WithClass... metaList) {
         fields(returned).forEach(f -> {
             var type = f.getType();
             Object empty;
             var matched = matchMeta(type, metaList);
             if (matched != null)
-                empty = matched.fromJava(new ArrayList());
+                empty = matched.empty();
             else
                 return;
 
@@ -69,7 +69,7 @@ public class VavrJackson {
         });
     }
 
-    private static MetaColl matchMeta(Class<?> type, MetaColl... metas) {
+    private static WithClass matchMeta(Class<?> type, WithClass... metas) {
         for (var meta : metas)
             if (meta.isSuperClassOf(type))
                 return meta;
@@ -90,21 +90,6 @@ public class VavrJackson {
                 fillEmpty(returned, metaOption);
 
             return returned;
-        });
-    }
-
-    private static void fillEmpty(Object returned, MetaOption metaOption) {
-        fields(returned).forEach(f -> {
-            var type = f.getType();
-            Object empty;
-            if (metaOption.isSuperClassOf(type))
-                empty = metaOption.fromValue(null);
-            else
-                return;
-
-            var o = getRefl(returned, f);
-            if (o == null)
-                setRefl(returned, f, empty);
         });
     }
 }

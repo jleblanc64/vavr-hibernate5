@@ -18,6 +18,8 @@ package io.github.jleblanc64.hibernate5.meta;
 public interface WithClass<T> {
     Class<T> monadClass();
 
+    T empty();
+
     default boolean isSuperClassOf(Object o) {
         if (o == null)
             return false;

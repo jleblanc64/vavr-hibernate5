@@ -32,6 +32,10 @@ public interface MetaOption<T> extends WithClass<T> {
 
     Object getOrNull(Object o);
 
+    default T empty() {
+        return fromValue(null);
+    }
+
     default Deserializers.Base deserBase() {
         return new Deserializers.Base() {
             @Override

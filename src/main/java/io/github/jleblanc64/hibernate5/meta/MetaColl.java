@@ -15,6 +15,7 @@
  */
 package io.github.jleblanc64.hibernate5.meta;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -26,6 +27,10 @@ public interface MetaColl<T, Col extends Collection> extends WithClass<T> {
     Class<Col> javaType();
 
     BagProvider<? extends T> bag();
+
+    default T empty() {
+        return fromJava(new ArrayList<>());
+    }
 
     default boolean isSet() {
         return javaType() == Set.class;
