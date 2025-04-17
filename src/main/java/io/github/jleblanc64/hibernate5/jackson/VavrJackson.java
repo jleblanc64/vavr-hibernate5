@@ -16,7 +16,6 @@
 package io.github.jleblanc64.hibernate5.jackson;
 
 import io.github.jleblanc64.hibernate5.meta.MetaColl;
-import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import io.github.jleblanc64.hibernate5.meta.WithClass;
 import io.github.jleblanc64.libcustom.LibCustom;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
@@ -26,7 +25,7 @@ import java.util.Collection;
 import static io.github.jleblanc64.libcustom.FieldMocked.*;
 
 public class VavrJackson {
-    public static void overrideCustom(MetaColl... metaList) {
+    public static void overrideCustom(WithClass... metaList) {
         LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
             var returned = argsR.returned;
             if (returned == null)
@@ -42,7 +41,7 @@ public class VavrJackson {
         });
     }
 
-    private static Collection toCollection(Object returned, MetaColl... metaList) {
+    private static Collection toCollection(Object returned, WithClass... metaList) {
         if (returned instanceof Collection)
             return (Collection) returned;
 
@@ -75,21 +74,5 @@ public class VavrJackson {
                 return meta;
 
         return null;
-    }
-
-    public static void overrideCustom(MetaOption metaOption, MetaColl... metaList) {
-        LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
-            var returned = argsR.returned;
-            if (returned == null)
-                return returned;
-
-            var collection = toCollection(returned, metaList);
-            if (collection != null)
-                collection.forEach(x -> fillEmpty(x, metaOption));
-            else
-                fillEmpty(returned, metaOption);
-
-            return returned;
-        });
     }
 }

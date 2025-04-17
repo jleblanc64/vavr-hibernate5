@@ -15,6 +15,7 @@
  */
 package io.github.jleblanc64.hibernate5.hibernate;
 
+import com.google.common.collect.Lists;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.FieldCustomType;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.JavaXProperty;
 import io.github.jleblanc64.hibernate5.hibernate.duplicate.MyCollectionType;
@@ -23,10 +24,7 @@ import io.github.jleblanc64.hibernate5.impl.MetaListImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaOptionImpl;
 import io.github.jleblanc64.hibernate5.impl.MetaSetImpl;
 import io.github.jleblanc64.hibernate5.jackson.VavrJackson;
-import io.github.jleblanc64.hibernate5.meta.MetaColl;
-import io.github.jleblanc64.hibernate5.meta.MetaList;
-import io.github.jleblanc64.hibernate5.meta.MetaOption;
-import io.github.jleblanc64.hibernate5.meta.MetaSet;
+import io.github.jleblanc64.hibernate5.meta.*;
 import io.github.jleblanc64.hibernate5.spring.OverrideContentType;
 import io.github.jleblanc64.hibernate5.spring.VavrSpring;
 import io.github.jleblanc64.libcustom.LibCustom;
@@ -69,18 +67,14 @@ public class VavrHibernate5 {
 
         VavrSpring.overrideCustom(metaList);
 
+        var metas = Lists.newArrayList(metaList, metaOption);
         if (metaSet != null)
-            VavrJackson.overrideCustom(metaList, metaSet);
-        else
-            VavrJackson.overrideCustom(metaList);
+            metas.add(metaSet);
+
+        VavrJackson.overrideCustom(metas.toArray(new WithClass[0]));
 
         overrideCustom(metaOption);
         VavrSpring.overrideCustom(metaOption);
-
-        if (metaSet != null)
-            VavrJackson.overrideCustom(metaOption, metaList, metaSet);
-        else
-            VavrJackson.overrideCustom(metaOption, metaList);
 
         OverrideContentType.override();
 
