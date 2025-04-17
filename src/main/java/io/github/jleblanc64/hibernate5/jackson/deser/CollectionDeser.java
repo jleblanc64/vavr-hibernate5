@@ -53,7 +53,8 @@ public class CollectionDeser {
 
         @Override
         public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
-            var elementType = property.getType().getBindings().getBoundType(0);
+            var propType = property == null ? ctxt.getContextualType() : property.getType();
+            var elementType = propType.getBindings().getBoundType(0);
             var delegateType = ctxt.getTypeFactory().constructCollectionLikeType(Collection.class, elementType);
             return withDelegate(_converter, delegateType, ctxt.findContextualValueDeserializer(delegateType, property));
         }

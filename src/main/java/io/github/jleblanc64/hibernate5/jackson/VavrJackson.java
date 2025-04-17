@@ -21,6 +21,7 @@ import io.github.jleblanc64.libcustom.LibCustom;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import static io.github.jleblanc64.libcustom.FieldMocked.*;
 
@@ -31,21 +32,40 @@ public class VavrJackson {
             if (returned == null)
                 return returned;
 
-            fields(returned).forEach(f -> {
-                var type = f.getType();
-                Object empty;
-                var matched = matchMeta(type, metaList);
-                if (matched != null)
-                    empty = matched.fromJava(new ArrayList());
-                else
-                    return;
-
-                var o = getRefl(returned, f);
-                if (o == null)
-                    setRefl(returned, f, empty);
-            });
+            var collection = toCollection(returned, metaList);
+            if (collection != null)
+                collection.forEach(x -> fillEmpty(x, metaList));
+            else
+                fillEmpty(returned, metaList);
 
             return returned;
+        });
+    }
+
+    private static Collection toCollection(Object returned, MetaColl... metaList) {
+        if (returned instanceof Collection)
+            return (Collection) returned;
+
+        var matched = matchMeta(returned.getClass(), metaList);
+        if (matched != null)
+            return matched.toJava(returned);
+
+        return null;
+    }
+
+    private static void fillEmpty(Object returned, MetaColl... metaList) {
+        fields(returned).forEach(f -> {
+            var type = f.getType();
+            Object empty;
+            var matched = matchMeta(type, metaList);
+            if (matched != null)
+                empty = matched.fromJava(new ArrayList());
+            else
+                return;
+
+            var o = getRefl(returned, f);
+            if (o == null)
+                setRefl(returned, f, empty);
         });
     }
 
@@ -57,26 +77,34 @@ public class VavrJackson {
         return null;
     }
 
-    public static void overrideCustom(MetaOption metaOption) {
+    public static void overrideCustom(MetaOption metaOption, MetaColl... metaList) {
         LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
             var returned = argsR.returned;
             if (returned == null)
                 return returned;
 
-            fields(returned).forEach(f -> {
-                var type = f.getType();
-                Object empty;
-                if (metaOption.isSuperClassOf(type))
-                    empty = metaOption.fromValue(null);
-                else
-                    return;
-
-                var o = getRefl(returned, f);
-                if (o == null)
-                    setRefl(returned, f, empty);
-            });
+            var collection = toCollection(returned, metaList);
+            if (collection != null)
+                collection.forEach(x -> fillEmpty(x, metaOption));
+            else
+                fillEmpty(returned, metaOption);
 
             return returned;
+        });
+    }
+
+    private static void fillEmpty(Object returned, MetaOption metaOption) {
+        fields(returned).forEach(f -> {
+            var type = f.getType();
+            Object empty;
+            if (metaOption.isSuperClassOf(type))
+                empty = metaOption.fromValue(null);
+            else
+                return;
+
+            var o = getRefl(returned, f);
+            if (o == null)
+                setRefl(returned, f, empty);
         });
     }
 }

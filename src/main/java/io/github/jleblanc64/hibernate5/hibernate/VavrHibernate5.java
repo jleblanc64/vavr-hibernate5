@@ -76,7 +76,11 @@ public class VavrHibernate5 {
 
         overrideCustom(metaOption);
         VavrSpring.overrideCustom(metaOption);
-        VavrJackson.overrideCustom(metaOption);
+
+        if (metaSet != null)
+            VavrJackson.overrideCustom(metaOption, metaList, metaSet);
+        else
+            VavrJackson.overrideCustom(metaOption, metaList);
 
         OverrideContentType.override();
 
