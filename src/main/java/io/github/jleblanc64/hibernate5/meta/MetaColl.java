@@ -15,8 +15,11 @@
  */
 package io.github.jleblanc64.hibernate5.meta;
 
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 public interface MetaColl<T, Col extends Collection> extends WithClass<T> {
     T fromJava(Collection l);
@@ -25,7 +28,7 @@ public interface MetaColl<T, Col extends Collection> extends WithClass<T> {
 
     Class<Col> javaType();
 
-    BagProvider<? extends T> bag();
+    BiFunction<SharedSessionContractImplementor, Collection, T> bag();
 
     default boolean isSet() {
         return javaType() == Set.class;

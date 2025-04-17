@@ -15,11 +15,12 @@
  */
 package io.github.jleblanc64.hibernate5.impl;
 
-import io.github.jleblanc64.hibernate5.meta.BagProvider;
 import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.vavr.collection.List;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
 
 public class MetaListImpl implements MetaList<List> {
     @Override
@@ -38,7 +39,7 @@ public class MetaListImpl implements MetaList<List> {
     }
 
     @Override
-    public BagProvider<? extends List> bag() {
+    public BiFunction<SharedSessionContractImplementor, Collection, List> bag() {
         return PersistentBagImpl::new;
     }
 }
