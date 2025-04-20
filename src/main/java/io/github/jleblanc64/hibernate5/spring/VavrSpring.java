@@ -21,7 +21,9 @@ import io.github.jleblanc64.hibernate5.meta.MetaList;
 import io.github.jleblanc64.hibernate5.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
 import lombok.SneakyThrows;
+import org.springframework.beans.TypeConverterSupport;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static io.github.jleblanc64.hibernate5.hibernate.Utils.getRefl;
+import static io.github.jleblanc64.hibernate5.hibernate.Utils.invoke;
 import static io.github.jleblanc64.libcustom.functional.ListF.f;
 
 public class VavrSpring {
@@ -54,6 +57,26 @@ public class VavrSpring {
                 return LibCustom.ORIGINAL;
 
             return metaList.fromJava(new ArrayList<>((Collection) source));
+        });
+
+        LibCustom.overrideWithSelf(TypeConverterSupport.class, "convertIfNecessary", x -> {
+
+            var args = x.args;
+            if (args.length != 3 || !(args[2] instanceof TypeDescriptor))
+                return LibCustom.ORIGINAL;
+
+            var requiredType = (Class) args[1];
+            if (!metaList.isSuperClassOf(requiredType))
+                return LibCustom.ORIGINAL;
+
+            var typeConverterDelegate = Utils.getRefl(x.self, "typeConverterDelegate");
+            var resolvableType = ResolvableType.forClassWithGenerics(List.class, String.class);
+            var typeDescriptor = new TypeDescriptor(resolvableType, null, null);
+
+            var value = args[0];
+            var l = (List) invoke(typeConverterDelegate, "convertIfNecessary", null, null,
+                    value, List.class, typeDescriptor);
+            return metaList.fromJava(l);
         });
     }
 

@@ -111,6 +111,7 @@ public class Utils {
     @SneakyThrows
     public static Object invoke(Object o, String methodName, Object... args) {
         var m = findMethod(o, methodName, args);
+        m.setAccessible(true);
         return m.invoke(o, args);
     }
 
